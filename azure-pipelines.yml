@@ -19,8 +19,8 @@ variables:
 #   value: $[variables.user]
 # - name: BLUESKY_PASS
 #   value: $[variables.password]
-- name: WILL_SKEET
-  value: $(will_it_skeet)
+# - name: WILL_SKEET
+#   value: $(will_it_skeet)
 
 steps:
 # - script: |
@@ -33,3 +33,4 @@ steps:
   env:
     BLUESKY_USER: $(user)
     BLUESKY_PASS: $(password)
+    WILL_SKEET: ${{ parameters.will_it_skeet }}
