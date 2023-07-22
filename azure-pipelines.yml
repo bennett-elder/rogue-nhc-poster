@@ -11,16 +11,19 @@ pool:
 
 variables:
 - group: "Rogue_NHC_Atlantic_Bluesky"
-- name: BLUESKY_USER
-  value: $[variables.user]
-- name: BLUESKY_PASS
-  value: $[variables.password]
+# - name: BLUESKY_USER
+#   value: $[variables.user]
+# - name: BLUESKY_PASS
+#   value: $[variables.password]
 
 steps:
-- script: |
-    echo $BLUESKY_USER
-    echo $BLUESKY_PASS
+# - script: |
+#     echo $BLUESKY_USER
+#     echo $BLUESKY_PASS
 - script: pip3 install -U atproto
   displayName: pip install
 - script: ./main.py
   displayName: run main.py
+  env:
+    BLUESKY_USER: $(user)
+    BLUESKY_PASS: $(password)
