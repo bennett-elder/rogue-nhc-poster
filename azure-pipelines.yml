@@ -17,6 +17,9 @@ variables:
   value: $[variables.BLUESKY_PASS]
 
 steps:
+- script: |
+    echo $BLUESKY_USER
+    echo $BLUESKY_PASS
 - script: pip3 install -U atproto
   displayName: pip install
 - script: ./main.py
