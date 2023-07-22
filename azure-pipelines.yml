@@ -12,9 +12,9 @@ pool:
 variables:
 - group: "Rogue_NHC_Atlantic_Bluesky"
 - name: BLUESKY_USER
-  value: $[variables.BLUESKY_USER]
+  value: $[variables.user]
 - name: BLUESKY_PASS
-  value: $[variables.BLUESKY_PASS]
+  value: $[variables.password]
 
 steps:
 - script: |
