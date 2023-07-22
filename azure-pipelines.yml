@@ -9,6 +9,13 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: "Rogue_NHC_Atlantic_Bluesky"
+- name: BLUESKY_USER
+  value: $[variables.BLUESKY_USER]
+- name: BLUESKY_PASS
+  value: $[variables.BLUESKY_PASS]
+
 steps:
 - script: pip3 install -U atproto
   displayName: pip install
