@@ -3,15 +3,34 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+
+trigger: none
+
+# YAML file in the main branch
+schedules:
+- cron: '5 0 * * *'
+  displayName: Daily midnight run (8pm EDT)
+  branches:
+    include:
+    - main
+- cron: '5 12 * * *'
+  displayName: Daily noon run (8am EDT)
+  branches:
+    include:
+    - main
+- cron: '5 12 * * *'
+  displayName: Daily 6pm run (2pm EDT)
+  branches:
+    include:
+    - main
+
 
 pool:
   vmImage: ubuntu-latest
 
 parameters:
   - name: will_it_skeet
-    default: False
+    default: True
 
 variables:
 - group: "Rogue_NHC_Atlantic_Bluesky"
