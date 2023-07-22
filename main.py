@@ -40,7 +40,7 @@ def main():
 
     print(will_skeet)
 
-    if will_skeet is True:
+    if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
         with open('two_atl_2d0.png', 'rb') as f:
             img_data = f.read()
