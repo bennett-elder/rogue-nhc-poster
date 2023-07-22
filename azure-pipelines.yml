@@ -9,12 +9,18 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: will_it_skeet
+    default: False
+
 variables:
 - group: "Rogue_NHC_Atlantic_Bluesky"
 # - name: BLUESKY_USER
 #   value: $[variables.user]
 # - name: BLUESKY_PASS
 #   value: $[variables.password]
+- name: WILL_SKEET
+  value: $(will_it_skeet)
 
 steps:
 # - script: |
