@@ -1,9 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-
 trigger: none
 
 # YAML file in the main branch
@@ -13,16 +7,19 @@ schedules:
   branches:
     include:
     - main
+  always: true
 - cron: '5 12 * * *'
   displayName: Daily noon run (8am EDT)
   branches:
     include:
     - main
-- cron: '5 12 * * *'
+  always: true
+- cron: '5 18 * * *'
   displayName: Daily 6pm run (2pm EDT)
   branches:
     include:
     - main
+  always: true
 
 
 pool:
