@@ -24,6 +24,8 @@ def main():
         partial_message = full_message
 
     print(partial_message)
+    print('partial_message length: ' + len(partial_message))
+    print('full_message length: ' + len(full_message))
 
     two_atl_2d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png'
     two_atl_7d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png'
@@ -38,7 +40,7 @@ def main():
     client = Client()
     client.login(bluesky_user, bluesky_pass)
 
-    print(will_skeet)
+    print('will_skeet: ' + will_skeet)
 
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
