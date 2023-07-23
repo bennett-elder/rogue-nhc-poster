@@ -27,6 +27,9 @@ def main():
     print(f'partial_message length: {len(partial_message)}')
     print(f'full_message length: {len(full_message)}')
 
+    if len(partial_message) > 300:
+        partial_message = partial_message[0:300]
+
     two_atl_2d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png'
     two_atl_7d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png'
     
