@@ -7,8 +7,9 @@ from atproto import Client
 import urllib.request
 
 def main():
-    two_atl_txt_html_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_txt.html'
-    contents = urllib.request.urlopen(two_atl_txt_html_url).read().decode("utf-8") 
+    # two_txt_html_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_txt.html'
+    two_txt_html_url = os.environ.get('REPORT_HTML_URL')
+    contents = urllib.request.urlopen(two_txt_html_url).read().decode("utf-8") 
     clean_left = contents.partition("<pre>")[2]
     clean_right = clean_left.partition("</pre>")[0]
 
@@ -30,11 +31,14 @@ def main():
     if len(partial_message) > 300:
         partial_message = partial_message[0:300]
 
-    two_atl_2d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png'
-    two_atl_7d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png'
+    # two_2d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png'
+    # two_7d0_url = 'https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png'
+    two_2d0_url = os.environ.get('TWO_2D0_URL')
+    two_7d0_url = os.environ.get('TWO_7D0_URL')
+    ocean_name = os.environ.get('OCEAN_NAME')
     
-    urllib.request.urlretrieve(two_atl_2d0_url, "two_atl_2d0.png")
-    urllib.request.urlretrieve(two_atl_7d0_url, "two_atl_7d0.png")
+    urllib.request.urlretrieve(two_2d0_url, "two_2d0.png")
+    urllib.request.urlretrieve(two_7d0_url, "two_7d0.png")
 
     bluesky_user = os.environ.get('BLUESKY_USER')
     bluesky_pass = os.environ.get('BLUESKY_PASS')
@@ -47,17 +51,17 @@ def main():
 
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
-        with open('two_atl_2d0.png', 'rb') as f:
+        with open('two_2d0.png', 'rb') as f:
             img_data = f.read()
 
             client.send_image(
-                text=partial_message, image=img_data, image_alt='2 day outlook greyscale representation of Atlantic Ocean for\n' + full_message
+                text=partial_message, image=img_data, image_alt='2 day outlook greyscale representation of ' + ocean_name + ' Ocean for\n' + full_message
             )
-        with open('two_atl_7d0.png', 'rb') as f:
+        with open('two_7d0.png', 'rb') as f:
             img_data = f.read()
 
             client.send_image(
-                text=partial_message, image=img_data, image_alt='7 day outlook color representation of Atlantic Ocean for\n' + full_message
+                text=partial_message, image=img_data, image_alt='7 day outlook color representation of ' + ocean_name + ' Ocean for\n' + full_message
             )
     else:
         print('no skeetin')
