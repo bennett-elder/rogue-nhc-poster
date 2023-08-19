@@ -68,3 +68,19 @@ jobs:
       TWO_2D0_URL: $(two_2d0_url)
       TWO_7D0_URL: $(two_7d0_url)
       OCEAN_NAME: $(ocean_name)
+- job: CentPac
+  variables:
+  - group: "Rogue_Central_Pacific_HC_Bluesky"
+  steps:
+  - script: pip3 install -U atproto
+    displayName: pip install
+  - script: ./main.py
+    displayName: run main.py
+    env:
+      BLUESKY_USER: $(user)
+      BLUESKY_PASS: $(password)
+      WILL_SKEET: ${{ parameters.will_it_skeet }}
+      REPORT_HTML_URL: $(report_html_url)
+      TWO_2D0_URL: $(two_2d0_url)
+      TWO_7D0_URL: $(two_7d0_url)
+      OCEAN_NAME: $(ocean_name)
