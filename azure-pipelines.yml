@@ -3,19 +3,25 @@ trigger: none
 # YAML file in the main branch
 schedules:
 - cron: '5 0 * * *'
-  displayName: Daily midnight run (8pm EDT)
+  displayName: Daily midnight run (8pm EDT, 5pm PDT, 2pm HST)
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 6 * * *'
+  displayName: Daily 6am run (2am EDT, 11pm PDT, 8pm HST)
   branches:
     include:
     - main
   always: true
 - cron: '5 12 * * *'
-  displayName: Daily noon run (8am EDT)
+  displayName: Daily noon run (8am EDT, 5am PDT, 2am HST)
   branches:
     include:
     - main
   always: true
 - cron: '5 18 * * *'
-  displayName: Daily 6pm run (2pm EDT)
+  displayName: Daily 6pm run (2pm EDT, 11am PDT, 8am HST)
   branches:
     include:
     - main
@@ -27,25 +33,25 @@ pool:
 
 parameters:
   - name: will_it_skeet
-    default: False
+    default: True
 
 jobs:
-# - job: Atlantic
-#   variables:
-#   - group: "Rogue_NHC_Atlantic_Bluesky"
-#   steps:
-#   - script: pip3 install -U atproto
-#     displayName: pip install
-#   - script: ./main.py
-#     displayName: run main.py
-#     env:
-#       BLUESKY_USER: $(user)
-#       BLUESKY_PASS: $(password)
-#       WILL_SKEET: ${{ parameters.will_it_skeet }}
-#       REPORT_HTML_URL: $(report_html_url)
-#       TWO_2D0_URL: $(two_2d0_url)
-#       TWO_7D0_URL: $(two_7d0_url)
-#       OCEAN_NAME: $(ocean_name)
+- job: Atlantic
+  variables:
+  - group: "Rogue_NHC_Atlantic_Bluesky"
+  steps:
+  - script: pip3 install -U atproto
+    displayName: pip install
+  - script: ./main.py
+    displayName: run main.py
+    env:
+      BLUESKY_USER: $(user)
+      BLUESKY_PASS: $(password)
+      WILL_SKEET: ${{ parameters.will_it_skeet }}
+      REPORT_HTML_URL: $(report_html_url)
+      TWO_2D0_URL: $(two_2d0_url)
+      TWO_7D0_URL: $(two_7d0_url)
+      OCEAN_NAME: $(ocean_name)
 - job: EastPac
   variables:
   - group: "Rogue_NHC_Pacific_Bluesky"
