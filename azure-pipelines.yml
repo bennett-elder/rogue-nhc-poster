@@ -45,3 +45,7 @@ jobs:
       BLUESKY_USER: $(user)
       BLUESKY_PASS: $(password)
       WILL_SKEET: ${{ parameters.will_it_skeet }}
+      REPORT_HTML_URL: $(report_html_url)
+      TWO_2D0_URL: $(two_2d0_url)
+      TWO_7D0_URL: $(two_7d0_url)
+      OCEAN_NAME: $(ocean_name)
