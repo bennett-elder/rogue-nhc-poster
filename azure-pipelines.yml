@@ -30,13 +30,26 @@ parameters:
     default: False
 
 jobs:
-- job: Atlantic
+# - job: Atlantic
+#   variables:
+#   - group: "Rogue_NHC_Atlantic_Bluesky"
+#   steps:
+#   - script: pip3 install -U atproto
+#     displayName: pip install
+#   - script: ./main.py
+#     displayName: run main.py
+#     env:
+#       BLUESKY_USER: $(user)
+#       BLUESKY_PASS: $(password)
+#       WILL_SKEET: ${{ parameters.will_it_skeet }}
+#       REPORT_HTML_URL: $(report_html_url)
+#       TWO_2D0_URL: $(two_2d0_url)
+#       TWO_7D0_URL: $(two_7d0_url)
+#       OCEAN_NAME: $(ocean_name)
+- job: EastPac
   variables:
-  - group: "Rogue_NHC_Atlantic_Bluesky"
+  - group: "Rogue_NHC_Pacific_Bluesky"
   steps:
-  # - script: |
-  #     echo $BLUESKY_USER
-  #     echo $BLUESKY_PASS
   - script: pip3 install -U atproto
     displayName: pip install
   - script: ./main.py
