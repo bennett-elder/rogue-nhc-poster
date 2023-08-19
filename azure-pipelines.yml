@@ -27,7 +27,7 @@ pool:
 
 parameters:
   - name: will_it_skeet
-    default: True
+    default: False
 
 variables:
 - group: "Rogue_NHC_Atlantic_Bluesky"
@@ -38,15 +38,17 @@ variables:
 # - name: WILL_SKEET
 #   value: $(will_it_skeet)
 
-steps:
-# - script: |
-#     echo $BLUESKY_USER
-#     echo $BLUESKY_PASS
-- script: pip3 install -U atproto
-  displayName: pip install
-- script: ./main.py
-  displayName: run main.py
-  env:
-    BLUESKY_USER: $(user)
-    BLUESKY_PASS: $(password)
-    WILL_SKEET: ${{ parameters.will_it_skeet }}
+jobs:
+- job: Atlantic
+  steps:
+  # - script: |
+  #     echo $BLUESKY_USER
+  #     echo $BLUESKY_PASS
+  - script: pip3 install -U atproto
+    displayName: pip install
+  - script: ./main.py
+    displayName: run main.py
+    env:
+      BLUESKY_USER: $(user)
+      BLUESKY_PASS: $(password)
+      WILL_SKEET: ${{ parameters.will_it_skeet }}
