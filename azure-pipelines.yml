@@ -39,6 +39,7 @@ jobs:
 - job: Atlantic
   variables:
   - group: "Rogue_NHC_Atlantic_Bluesky"
+  - group: "Tropical_Weather_Outlook_ATL"
   steps:
   - script: pip3 install -U atproto
     displayName: pip install
@@ -55,6 +56,7 @@ jobs:
 - job: EastPac
   variables:
   - group: "Rogue_NHC_Pacific_Bluesky"
+  - group: "Tropical_Weather_Outlook_EPAC"
   steps:
   - script: pip3 install -U atproto
     displayName: pip install
@@ -71,6 +73,7 @@ jobs:
 - job: CentPac
   variables:
   - group: "Rogue_Central_Pacific_HC_Bluesky"
+  - group: "Tropical_Weather_Outlook_CPAC"
   steps:
   - script: pip3 install -U atproto
     displayName: pip install
