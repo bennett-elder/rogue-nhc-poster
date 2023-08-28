@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 import os
 from time import sleep
-from atproto import Client
+from atproto import Client, models
 import urllib.request
 
 def main():
@@ -51,18 +51,30 @@ def main():
 
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
-        with open('two_2d0.png', 'rb') as f:
-            img_data = f.read()
 
-            client.send_image(
-                text=partial_message, image=img_data, image_alt='2 day outlook greyscale representation of ' + ocean_name + ' Ocean for\n' + full_message
-            )
-        with open('two_7d0.png', 'rb') as f:
-            img_data = f.read()
+        with open('two_2d0.png', 'rb') as f2:
+            two_2d0_img_data = f2.read()
+        with open('two_7d0.png', 'rb') as f7:
+            two_7d0_img_data = f7.read()
 
-            client.send_image(
-                text=partial_message, image=img_data, image_alt='7 day outlook color representation of ' + ocean_name + ' Ocean for\n' + full_message
+        two_2d0_upload = client.com.atproto.repo.upload_blob(two_2d0_img_data)
+        two_7d0_upload = client.com.atproto.repo.upload_blob(two_7d0_img_data)
+        images = [
+            models.AppBskyEmbedImages.Image(alt='tropical weather outlook over the next 2 days greyscale satellite image of ' + ocean_name + ' Ocean for\n', image=two_2d0_upload.blob),
+            models.AppBskyEmbedImages.Image(alt='tropical weather outlook over the next 7 days color illustrated image of ' + ocean_name + ' Ocean for\n', image=two_7d0_upload.blob),
+        ]
+        embed = models.AppBskyEmbedImages.Main(images=images)
+
+        client.com.atproto.repo.create_record(
+            models.ComAtprotoRepoCreateRecord.Data(
+                repo=client.me.did,
+                collection=models.ids.AppBskyFeedPost,
+                record=models.AppBskyFeedPost.Main(
+                    createdAt=datetime.now().isoformat(), text=partial_message, embed=embed
+                ),
             )
+        )
+
     else:
         print('no skeetin')
     
