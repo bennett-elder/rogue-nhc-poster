@@ -34,7 +34,7 @@ def main():
 
     cleaned_gist = gist.replace("""...
 ...""", ". ").replace("""
-""", " ").replace("...", "").capitalize()
+""", " ").replace("...", "")
 
     print(cleaned_gist)
 
