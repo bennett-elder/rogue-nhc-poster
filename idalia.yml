@@ -36,7 +36,8 @@ parameters:
 jobs:
 - job: Scorpion
   variables:
-  - group: "Rogue_NHC_Atlantic_Bluesky"
+  - group: "Bennett_Bluesky_creds"
+  # - group: "Rogue_NHC_Atlantic_Bluesky"
   - group: "Idalia"
   steps:
   - script: pip3 install -U atproto
