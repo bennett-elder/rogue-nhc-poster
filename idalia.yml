@@ -34,7 +34,7 @@ parameters:
     default: True
 
 jobs:
-- job: EastPac
+- job: Scorpion
   variables:
   - group: "Bennett_Bluesky_creds"
   - group: "Idalia"
