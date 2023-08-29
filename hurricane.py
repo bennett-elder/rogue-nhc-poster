@@ -37,6 +37,8 @@ def main():
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
 
+        message_text = storm_name + ' Public Advisory'
+
         with open('img1', 'rb') as f1:
             img1_data = f1.read()
         with open('img2', 'rb') as f2:
@@ -59,13 +61,34 @@ def main():
         ]
         embed = models.AppBskyEmbedImages.Main(images=images)
 
+        facets = []
+        facets.append(
+            {
+                "index": {
+                    "byteStart": 1,
+                    "byteEnd": len(message_text),
+                },
+                "features": [
+                    {
+                        "$type": "app.bsky.richtext.facet#link",
+                        # NOTE: URI ("I") not URL ("L")
+                        "uri": link_url,
+                    }
+                ],
+            }
+        )
+
+        post = models.AppBskyFeedPost.Main(
+                    createdAt=datetime.now().isoformat(), text=message_text, embed=embed
+                )
+        
+        post["facets"] = facets
+
         client.com.atproto.repo.create_record(
             models.ComAtprotoRepoCreateRecord.Data(
                 repo=client.me.did,
                 collection=models.ids.AppBskyFeedPost,
-                record=models.AppBskyFeedPost.Main(
-                    createdAt=datetime.now().isoformat(), text=storm_name + ' ' + link_url, embed=embed
-                ),
+                record=post,
             )
         )
     else:
