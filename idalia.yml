@@ -1,30 +1,30 @@
 trigger: none
 
-# schedules:
-# - cron: '5 3 * * *'
-#   displayName: 8pm PDT     11pm EDT    3am UTC
-#   branches:
-#     include:
-#     - main
-#   always: true
-# - cron: '5 9 * * *'
-#   displayName: 2am PDT     5am EDT     9am UTC
-#   branches:
-#     include:
-#     - main
-#   always: true
-# - cron: '5 15 * * *'
-#   displayName: 8am PDT     11am EDT    3pm UTC
-#   branches:
-#     include:
-#     - main
-#   always: true
-# - cron: '5 21 * * *'
-#   displayName: 2pm PDT     5pm EDT     9pm UTC
-#   branches:
-#     include:
-#     - main
-#   always: true
+schedules:
+- cron: '5 3 * * *'
+  displayName: 8pm PDT     11pm EDT    3am UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 9 * * *'
+  displayName: 2am PDT     5am EDT     9am UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 15 * * *'
+  displayName: 8am PDT     11am EDT    3pm UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 21 * * *'
+  displayName: 2pm PDT     5pm EDT     9pm UTC
+  branches:
+    include:
+    - main
+  always: true
 
 pool:
   vmImage: ubuntu-latest
