@@ -32,7 +32,11 @@ def main():
     header_stripped = clean_right.partition("...")[2]
     gist = header_stripped.partition("SUMMARY")[0]
 
-    print('STARTER' + gist + 'ENDER')
+    cleaned_gist = gist.replace("""...
+...""", ". ").replace("""
+""", " ").replace("...", "").capitalize()
+
+    print(cleaned_gist)
 
     client = Client()
     client.login(bluesky_user, bluesky_pass)
@@ -42,7 +46,11 @@ def main():
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
 
-        message_text = storm_name + ' Public Advisory'
+        link_text = storm_name + ' Public Advisory'
+        length_of_link_text = len(link_text)
+
+        message_text = link_text + """
+""" + cleaned_gist
 
         urllib.request.urlretrieve(img1_url, "img1")
         urllib.request.urlretrieve(img2_url, "img2")
@@ -76,7 +84,7 @@ def main():
             {
                 "index": {
                     "byteStart": 0,
-                    "byteEnd": len(message_text),
+                    "byteEnd": length_of_link_text,
                 },
                 "features": [
                     {
