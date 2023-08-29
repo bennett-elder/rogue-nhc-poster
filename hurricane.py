@@ -65,7 +65,7 @@ def main():
         facets.append(
             {
                 "index": {
-                    "byteStart": 1,
+                    "byteStart": 0,
                     "byteEnd": len(message_text),
                 },
                 "features": [
