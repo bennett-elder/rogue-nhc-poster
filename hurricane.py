@@ -79,11 +79,9 @@ def main():
         )
 
         post = models.AppBskyFeedPost.Main(
-                    createdAt=datetime.now().isoformat(), text=message_text, embed=embed
+                    createdAt=datetime.now().isoformat(), text=message_text, embed=embed, facets=facets
                 )
         
-        post["facets"] = facets
-
         client.com.atproto.repo.create_record(
             models.ComAtprotoRepoCreateRecord.Data(
                 repo=client.me.did,
