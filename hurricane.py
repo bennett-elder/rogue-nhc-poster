@@ -20,14 +20,23 @@ def main():
     img4_url = os.environ.get('IMG4_URL')
     img4_alt = os.environ.get('IMG4_ALT')
     
-    urllib.request.urlretrieve(img1_url, "img1")
-    urllib.request.urlretrieve(img2_url, "img2")
-    urllib.request.urlretrieve(img3_url, "img3")
-    urllib.request.urlretrieve(img4_url, "img4")
-
     bluesky_user = os.environ.get('BLUESKY_USER')
     bluesky_pass = os.environ.get('BLUESKY_PASS')
     will_skeet = os.getenv('WILL_SKEET', False)
+
+
+    contents = urllib.request.urlopen(link_url).read().decode("utf-8") 
+    clean_left = contents.partition("<pre>")[2]
+    clean_right = clean_left.partition("</pre>")[0]
+
+    header_stripped = clean_right.partition("...")[2]
+    gist = header_stripped.partition("SUMMARY")[0]
+
+    cleaned_gist = gist.replace("""...
+...""", ". ").replace("""
+""", " ").replace("...", "")
+
+    print(cleaned_gist)
 
     client = Client()
     client.login(bluesky_user, bluesky_pass)
@@ -37,7 +46,16 @@ def main():
     if will_skeet == 'True' or will_skeet == 'true':
         print('skeetin')
 
-        message_text = storm_name + ' Public Advisory'
+        link_text = storm_name + ' Public Advisory'
+        length_of_link_text = len(link_text)
+
+        message_text = link_text + """
+""" + cleaned_gist
+
+        urllib.request.urlretrieve(img1_url, "img1")
+        urllib.request.urlretrieve(img2_url, "img2")
+        urllib.request.urlretrieve(img3_url, "img3")
+        urllib.request.urlretrieve(img4_url, "img4")
 
         with open('img1', 'rb') as f1:
             img1_data = f1.read()
@@ -66,7 +84,7 @@ def main():
             {
                 "index": {
                     "byteStart": 0,
-                    "byteEnd": len(message_text),
+                    "byteEnd": length_of_link_text,
                 },
                 "features": [
                     {
