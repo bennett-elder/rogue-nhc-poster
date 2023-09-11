@@ -54,28 +54,28 @@ def main():
 
         urllib.request.urlretrieve(img1_url, "img1")
         urllib.request.urlretrieve(img2_url, "img2")
-        urllib.request.urlretrieve(img3_url, "img3")
-        urllib.request.urlretrieve(img4_url, "img4")
+        # urllib.request.urlretrieve(img3_url, "img3")
+        # urllib.request.urlretrieve(img4_url, "img4")
 
         with open('img1', 'rb') as f1:
             img1_data = f1.read()
         with open('img2', 'rb') as f2:
             img2_data = f2.read()
-        with open('img3', 'rb') as f3:
-            img3_data = f3.read()
-        with open('img4', 'rb') as f4:
-            img4_data = f4.read()
+        # with open('img3', 'rb') as f3:
+        #     img3_data = f3.read()
+        # with open('img4', 'rb') as f4:
+        #     img4_data = f4.read()
         
         img1_upload = client.com.atproto.repo.upload_blob(img1_data)
         img2_upload = client.com.atproto.repo.upload_blob(img2_data)
-        img3_upload = client.com.atproto.repo.upload_blob(img3_data)
-        img4_upload = client.com.atproto.repo.upload_blob(img4_data)
+        # img3_upload = client.com.atproto.repo.upload_blob(img3_data)
+        # img4_upload = client.com.atproto.repo.upload_blob(img4_data)
         
         images = [
             models.AppBskyEmbedImages.Image(alt=img1_alt, image=img1_upload.blob),
             models.AppBskyEmbedImages.Image(alt=img2_alt, image=img2_upload.blob),
-            models.AppBskyEmbedImages.Image(alt=img3_alt, image=img3_upload.blob),
-            models.AppBskyEmbedImages.Image(alt=img4_alt, image=img4_upload.blob),
+            # models.AppBskyEmbedImages.Image(alt=img3_alt, image=img3_upload.blob),
+            # models.AppBskyEmbedImages.Image(alt=img4_alt, image=img4_upload.blob),
         ]
         embed = models.AppBskyEmbedImages.Main(images=images)
 
