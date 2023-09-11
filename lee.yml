@@ -1,0 +1,60 @@
+trigger: none
+
+schedules:
+- cron: '5 3 * * *'
+  displayName: 8pm PDT     11pm EDT    3am UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 9 * * *'
+  displayName: 2am PDT     5am EDT     9am UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 15 * * *'
+  displayName: 8am PDT     11am EDT    3pm UTC
+  branches:
+    include:
+    - main
+  always: true
+- cron: '5 21 * * *'
+  displayName: 2pm PDT     5pm EDT     9pm UTC
+  branches:
+    include:
+    - main
+  always: true
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: will_it_skeet
+    default: True
+
+jobs:
+- job: Scorpion
+  variables:
+  # - group: "Bennett_Bluesky_creds"
+  - group: "Rogue_NHC_Atlantic_Bluesky"
+  - group: "Lee"
+  steps:
+  - script: pip3 install -U atproto
+    displayName: pip install
+  - script: ./hurricane.py
+    displayName: run hurricane.py
+    env:
+      BLUESKY_USER: $(user)
+      BLUESKY_PASS: $(password)
+      WILL_SKEET: ${{ parameters.will_it_skeet }}
+      STORM_NAME: $(storm_name)
+      LINK_URL: $(link_url)
+      IMG1_URL: $(img1_url)
+      IMG1_ALT: $(img1_alt)
+      IMG2_URL: $(img2_url)
+      IMG2_ALT: $(img2_alt)
+      IMG3_URL: $(img3_url)
+      IMG3_ALT: $(img3_alt)
+      IMG4_URL: $(img4_url)
+      IMG4_ALT: $(img4_alt)
