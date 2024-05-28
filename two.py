@@ -6,8 +6,6 @@
 
 from datetime import datetime, timezone
 import os
-from time import sleep
-from atproto import Client, models
 import urllib.request
 
 from typing import Dict, List
