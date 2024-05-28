@@ -99,6 +99,7 @@ def load_json_config(filename: str):
         return output
 
 def main():
+    do_downloads = True
     do_uploads = True
     do_post = True
     pds_url = os.getenv('PDS_URL', 'https://bsky.social')
@@ -137,17 +138,18 @@ def main():
 
     if len(partial_message) > 300:
         partial_message = partial_message[0:300]
-   
-    urllib.request.urlretrieve(two_2d0_url, "two_2d0.png")
-    urllib.request.urlretrieve(two_7d0_url, "two_7d0.png")
 
-    poster = Poster(pds_url, bluesky_user, bluesky_pass)
+    two_2d0_alt_text = f'tropical weather outlook over the next 2 days greyscale satellite image of {ocean_name} Ocean for\n{full_message}'
+    two_7d0_alt_text = f'tropical weather outlook over the next 7 days color illustrated image of {ocean_name} Ocean for\n{full_message}'
 
     two_2d0_filename = 'two_2d0.png'
     two_7d0_filename = 'two_7d0.png'
 
-    two_2d0_alt_text = f'tropical weather outlook over the next 2 days greyscale satellite image of {ocean_name} Ocean for\n{full_message}'
-    two_7d0_alt_text = f'tropical weather outlook over the next 7 days color illustrated image of {ocean_name} Ocean for\n{full_message}'
+    if do_downloads:
+        urllib.request.urlretrieve(two_2d0_url, two_2d0_filename)
+        urllib.request.urlretrieve(two_7d0_url, two_7d0_filename)
+
+    poster = Poster(pds_url, bluesky_user, bluesky_pass)
 
     images = []
 
@@ -156,10 +158,10 @@ def main():
         images = poster.add_image(images, two_7d0_filename, two_7d0_alt_text)
 
     if do_post:
-        resp = poster.create_post(partial_message, images)
+        response = poster.create_post(partial_message, images)
 
         print("createRecord response:", file=sys.stderr)
-        print(json.dumps(resp.json(), indent=2))
+        print(json.dumps(response.json(), indent=2))
 
 if __name__ == '__main__':
     main()
