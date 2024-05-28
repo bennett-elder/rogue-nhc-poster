@@ -23,7 +23,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run two.py
       env:
-        TWO_REGION: ${{ variables.TWO_REGION }}
+        TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
       run: |
