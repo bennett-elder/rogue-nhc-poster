@@ -2,6 +2,15 @@ name: Tropical Weather Outlook
 
 on:
   workflow_dispatch:
+  schedule:
+    # Daily midnight run (8pm EDT, 5pm PDT, 2pm HST)
+    - cron: '5 0 * * *'
+    # Daily 6am run (2am EDT, 11pm PDT, 8pm HST)
+    - cron: '5 6 * * *'
+    # Daily noon run (8am EDT, 5am PDT, 2am HST)
+    - cron: '5 12 * * *'
+    # Daily 6pm run (2pm EDT, 11am PDT, 8am HST)
+    - cron: '5 18 * * *'
 
 permissions:
   contents: read
@@ -9,6 +18,46 @@ permissions:
 jobs:
   ATL:
     environment: ATL 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run two.py
+      env:
+        TWO_REGION: ${{ vars.TWO_REGION }}
+        BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
+        BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+      run: |
+        python ./two.py
+  EPAC:
+    environment: EPAC 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run two.py
+      env:
+        TWO_REGION: ${{ vars.TWO_REGION }}
+        BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
+        BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+      run: |
+        python ./two.py
+  CPAC:
+    environment: CPAC 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
