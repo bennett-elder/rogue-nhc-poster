@@ -2,21 +2,21 @@
     "ATL": {
         "ocean_name": "Atlantic",
         "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_txt.html",
-        "report_html_line_breaker": "<br>",
+        "report_html_line_breaker": "<br />",
         "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png",
         "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png"
     },
     "CPAC": {
         "ocean_name": "Central Pacific",
         "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_txt.html",
-        "report_html_line_breaker": "\n",
+        "report_html_line_breaker": "<br />",
         "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_2d0.png",
         "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_7d0.png"
     },
     "EPAC": {
         "ocean_name": "Eastern Pacific",
         "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_txt.html",
-        "report_html_line_breaker": "<br>",
+        "report_html_line_breaker": "<br />",
         "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_2d0.png",
         "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_7d0.png"
     }
