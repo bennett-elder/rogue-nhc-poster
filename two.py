@@ -123,6 +123,7 @@ def main():
     temp_split_message = message.split(two_txt_html_report_linebreaker)
 
     full_split_message = temp_split_message[4:]
+    full_split_message = full_split_message.replace("Gulf of America", "Gulf of Mexico")
     full_message = os.linesep.join(full_split_message)
 
     if "1." in full_message:
