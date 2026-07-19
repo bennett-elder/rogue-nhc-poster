@@ -101,13 +101,13 @@ def parse_rss_storms(xml_content, basin=''):
                 continue
             atcf = atcf_match.group(1)
             
-            # Extract wallet from link (e.g., "EP1" from "MIATASEP1")
-            link_el = item.find('link')
-            link = link_el.text.strip() if link_el is not None and link_el.text else ''
-            wallet_match = re.search(r'MIAT[A-Z]*([A-Z]*\d+)', link)
-            if not wallet_match:
-                continue
-            wallet = wallet_match.group(1)
+            # Extract wallet from atcf AL022026 or EP052026 or EP062026
+            wallet_suffix = atcf[2:4]
+            wallet_prefix = atcf[:2]
+            if wallet_prefix == 'AL':
+                wallet_prefix = 'AT'
+
+            wallet = wallet_prefix + wallet_suffix
             
             # Determine storm type from title
             if 'Depresión Tropical' in title or 'Tropical Depression' in title:
