@@ -5,6 +5,7 @@ import os
 import sys
 import urllib.request
 from datetime import datetime, timezone
+import requests
 
 
 def fetch_advisory_text(advisory_url):
@@ -21,6 +22,81 @@ def fetch_advisory_text(advisory_url):
     return cleaned_gist
 
 
+class Poster:
+    def __init__(self, pds_url: str, handle: str, password: str) -> None:
+        self.pds_url = pds_url
+        self.session = self.bsky_login_session(handle, password)
+
+    def bsky_login_session(self, handle: str, password: str) -> dict:
+        resp = requests.post(
+            self.pds_url + "/xrpc/com.atproto.server.createSession",
+            json={"identifier": handle, "password": password},
+        )
+        resp.raise_for_status()
+        return resp.json()
+
+    def upload_file(self, filename, img_bytes) -> dict:
+        suffix = filename.split(".")[-1].lower()
+        mimetype = "application/octet-stream"
+        if suffix in ["png"]:
+            mimetype = "image/png"
+        elif suffix in ["jpeg", "jpg"]:
+            mimetype = "image/jpeg"
+        elif suffix in ["webp"]:
+            mimetype = "image/webp"
+
+        access_token = self.session["accessJwt"]
+        resp = requests.post(
+            self.pds_url + "/xrpc/com.atproto.repo.uploadBlob",
+            headers={
+                "Content-Type": mimetype,
+                "Authorization": "Bearer " + access_token,
+            },
+            data=img_bytes,
+        )
+        resp.raise_for_status()
+        return resp.json()["blob"]
+
+    def create_post(self, post_text, images=[]):
+        now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+        post = {
+            "$type": "app.bsky.feed.post",
+            "text": post_text,
+            "createdAt": now,
+        }
+
+        post["embed"] = {
+            "$type": "app.bsky.embed.images",
+            "images": images,
+        }
+
+        response = requests.post(
+            self.pds_url + "/xrpc/com.atproto.repo.createRecord",
+            headers={"Authorization": "Bearer " + self.session["accessJwt"]},
+            json={
+                "repo": self.session["did"],
+                "collection": "app.bsky.feed.post",
+                "record": post,
+            },
+        )
+
+        return response
+
+    def add_image(self, input_image_array: list, filename: str, alt_text: str) -> list:
+        with open(filename, 'rb') as f:
+            img_data = f.read()
+        blob = self.upload_file(filename, img_data)
+
+        input_image_array.append(
+            {
+                "alt": alt_text,
+                "image": blob
+            }
+        )
+        return input_image_array
+
+
 def main():
     result_file = sys.argv[1] if len(sys.argv) > 1 else 'result.json'
 
@@ -33,6 +109,7 @@ def main():
         return
 
     will_skeet = os.getenv('WILL_SKEET', 'False')
+    pds_url = os.getenv('PDS_URL', 'https://bsky.social')
 
     for storm in new_storms:
         storm_name = storm['name']
@@ -55,11 +132,6 @@ def main():
             print('  no skeetin')
             continue
 
-        from atproto import Client, models
-
-        client = Client()
-        client.login(bluesky_user, bluesky_pass)
-
         link_text = f'{storm_name} Public Advisory'
         message_text = f'{link_text}\n{gist}'
 
@@ -67,43 +139,16 @@ def main():
         urllib.request.urlretrieve(images['5day_cone'], 'tmp/img_5day.png')
         urllib.request.urlretrieve(images['current_wind'], 'tmp/img_wind.png')
 
-        with open('tmp/img_5day.png', 'rb') as f:
-            img1_data = f.read()
-        with open('tmp/img_wind.png', 'rb') as f:
-            img2_data = f.read()
+        poster = Poster(pds_url, bluesky_user, bluesky_pass)
 
-        img1_upload = client.com.atproto.repo.upload_blob(img1_data)
-        img2_upload = client.com.atproto.repo.upload_blob(img2_data)
+        image_list = []
+        image_list = poster.add_image(image_list, 'tmp/img_5day.png', image_alts['5day_cone'])
+        image_list = poster.add_image(image_list, 'tmp/img_wind.png', image_alts['current_wind'])
 
-        embed_images = [
-            models.AppBskyEmbedImages.Image(alt=image_alts['5day_cone'], image=img1_upload.blob),
-            models.AppBskyEmbedImages.Image(alt=image_alts['current_wind'], image=img2_upload.blob),
-        ]
-        embed = models.AppBskyEmbedImages.Main(images=embed_images)
+        response = poster.create_post(message_text, image_list)
 
-        facets = [
-            {
-                'index': {'byteStart': 0, 'byteEnd': len(link_text)},
-                'features': [
-                    {'$type': 'app.bsky.richtext.facet#link', 'uri': advisory_url}
-                ],
-            }
-        ]
-
-        post = models.AppBskyFeedPost.Main(
-            createdAt=datetime.now(timezone.utc).isoformat(),
-            text=message_text,
-            embed=embed,
-            facets=facets,
-        )
-
-        client.com.atproto.repo.create_record(
-            models.ComAtprotoRepoCreateRecord.Data(
-                repo=client.me.did,
-                collection=models.ids.AppBskyFeedPost,
-                record=post,
-            )
-        )
+        print("createRecord response:", file=sys.stderr)
+        print(json.dumps(response.json(), indent=2))
 
         print('  posted!')
 

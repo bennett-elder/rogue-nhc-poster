@@ -25,11 +25,12 @@ jobs:
           key: known-storms-${{ github.run_id }}
           restore-keys: known-storms-
 
-      - run: pip install atproto
-      - run: python3 detect_storms.py > result.json
+       - run: pip install requests
+       - run: python3 detect_storms.py > result.json
 
       - run: python3 post_storm.py
         env:
+          PDS_URL: 'https://bsky.social'
           BLUESKY_USER_ATL: ${{ secrets.BLUESKY_USER_ATL }}
           BLUESKY_PASS_ATL: ${{ secrets.BLUESKY_PASS_ATL }}
           BLUESKY_USER_EPAC: ${{ secrets.BLUESKY_USER_EPAC }}
