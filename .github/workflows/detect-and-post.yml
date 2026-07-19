@@ -30,6 +30,8 @@ jobs:
         restore-keys: "known-storms-"
     - run: pip install requests
     - run: python3 detect_storms.py > result.json
+      env:
+        BASINS: 'ATL,EPAC,CPAC,ATL-ES,EPAC-ES'
     - run: python3 post_storm.py
       env:
         PDS_URL: 'https://bsky.social'
