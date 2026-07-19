@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -38,45 +39,102 @@ def fetch_url(url):
         return resp.read().decode('utf-8')
 
 
-def parse_rss_storms(xml_content):
+def parse_rss_storms(xml_content, basin=''):
     root = ET.fromstring(xml_content)
     storms = []
 
     for item in root.iter('item'):
-        cyclone = item.find(f'{{{NHC_NS}}}Cyclone')
-        if cyclone is None:
-            continue
-
-        def get(tag):
-            el = cyclone.find(f'{{{NHC_NS}}}{tag}')
-            return el.text.strip() if el is not None and el.text else ''
-
-        atcf = get('atcf')
-        if not atcf:
-            continue
-
-        link_el = item.find('link')
-        link = link_el.text.strip() if link_el is not None and link_el.text else ''
-
         title_el = item.find('title')
         title = title_el.text.strip() if title_el is not None and title_el.text else ''
 
-        desc_el = item.find('description')
-        description = desc_el.text.strip() if desc_el is not None and desc_el.text else ''
+        # Check if this is a Spanish feed item (no nhc:Cyclone element)
+        cyclone = item.find(f'{{{NHC_NS}}}Cyclone')
+        
+        if cyclone is not None:
+            # English feed format - has nhc:Cyclone element
+            def get(tag):
+                el = cyclone.find(f'{{{NHC_NS}}}{tag}')
+                return el.text.strip() if el is not None and el.text else ''
 
-        pubdate_el = item.find('pubDate')
-        pubdate = pubdate_el.text.strip() if pubdate_el is not None and pubdate_el.text else ''
+            atcf = get('atcf')
+            if not atcf:
+                continue
 
-        storms.append({
-            'name': get('name'),
-            'type': get('type'),
-            'atcf': atcf,
-            'wallet': get('wallet'),
-            'link': link,
-            'title': title,
-            'description': description,
-            'pubDate': pubdate,
-        })
+            link_el = item.find('link')
+            link = link_el.text.strip() if link_el is not None and link_el.text else ''
+
+            desc_el = item.find('description')
+            description = desc_el.text.strip() if desc_el is not None and desc_el.text else ''
+
+            pubdate_el = item.find('pubDate')
+            pubdate = pubdate_el.text.strip() if pubdate_el is not None and pubdate_el.text else ''
+
+            storms.append({
+                'name': get('name'),
+                'type': get('type'),
+                'atcf': atcf,
+                'wallet': get('wallet'),
+                'link': link,
+                'title': title,
+                'description': description,
+                'pubDate': pubdate,
+            })
+        else:
+            # Spanish feed format - parse from title and description
+            # Title format: "Depresión Tropical Six-E Aviso Publico* Numero 1"
+            # Link format: "https://www.nhc.noaa.gov/text/refresh/MIATASEP1+shtml/..."
+            # Description contains: "SNM Miami FL  EP062026"
+            
+            # Only process "Aviso Publico" (Public Advisory) items
+            if 'Aviso Publico' not in title:
+                continue
+            
+            # Extract storm name from title (e.g., "Six-E" from "Depresión Tropical Six-E Aviso Publico* Numero 1")
+            name_match = re.search(r'(?:Depresión Tropical|Tropical Depression|Tormenta Tropical|Tropical Storm|Huracán|Hurricane)\s+([A-Za-z]+-[A-Za-z]+|[A-Za-z]+)', title)
+            if not name_match:
+                continue
+            storm_name = name_match.group(1)
+            
+            # Extract ATC code from description (e.g., "EP062026" from "SNM Miami FL  EP062026")
+            atcf_match = re.search(r'SNM Miami FL\s+([A-Z]{2}\d{6})', title + ' ' + (item.find('description').text if item.find('description') is not None else ''))
+            if not atcf_match:
+                continue
+            atcf = atcf_match.group(1)
+            
+            # Extract wallet from link (e.g., "EP1" from "MIATASEP1")
+            link_el = item.find('link')
+            link = link_el.text.strip() if link_el is not None and link_el.text else ''
+            wallet_match = re.search(r'MIAT[A-Z]*([A-Z]*\d+)', link)
+            if not wallet_match:
+                continue
+            wallet = wallet_match.group(1)
+            
+            # Determine storm type from title
+            if 'Depresión Tropical' in title or 'Tropical Depression' in title:
+                storm_type = 'Tropical Depression'
+            elif 'Tormenta Tropical' in title or 'Tropical Storm' in title:
+                storm_type = 'Tropical Storm'
+            elif 'Huracán' in title or 'Hurricane' in title:
+                storm_type = 'Hurricane'
+            else:
+                storm_type = ''
+            
+            desc_el = item.find('description')
+            description = desc_el.text.strip() if desc_el is not None and desc_el.text else ''
+
+            pubdate_el = item.find('pubDate')
+            pubdate = pubdate_el.text.strip() if pubdate_el is not None and pubdate_el.text else ''
+
+            storms.append({
+                'name': storm_name,
+                'type': storm_type,
+                'atcf': atcf,
+                'wallet': wallet,
+                'link': link,
+                'title': title,
+                'description': description,
+                'pubDate': pubdate,
+            })
 
     return storms
 
@@ -91,11 +149,9 @@ def get_storm_image_urls(atcf):
 def get_storm_advisory_url(wallet, basin=''):
     # Spanish advisory URLs use different prefixes:
     # - Atlantic: MIATASEP{wallet}+shtml/
-    # - Eastern Pacific: MIATCPEP{wallet}+shtml/
-    if basin == 'ATL-ES':
+    # - Eastern Pacific: MIATASEP{wallet}+shtml/
+    if basin in ('ATL-ES', 'EPAC-ES'):
         return f'https://www.nhc.noaa.gov/text/refresh/MIATASEP{wallet}+shtml/'
-    elif basin == 'EPAC-ES':
-        return f'https://www.nhc.noaa.gov/text/refresh/MIATCPEP{wallet}+shtml/'
     else:
         return f'https://www.nhc.noaa.gov/text/refresh/MIATCP{wallet}+shtml/'
 
@@ -143,7 +199,7 @@ def main():
             continue
 
         try:
-            storms = parse_rss_storms(xml_content)
+            storms = parse_rss_storms(xml_content, basin)
         except ET.ParseError as e:
             print(f'  ERROR parsing XML from {basin}: {e}', file=sys.stderr)
             continue
