@@ -139,10 +139,9 @@ def parse_rss_storms(xml_content, basin=''):
     return storms
 
 
-def get_storm_image_urls(atcf):
-    basin = atcf[:2]
+def get_storm_image_urls(wallet, atcf):
     storm_num = atcf[2:4]
-    base_url = f'https://www.nhc.noaa.gov/storm_graphics/{basin}{storm_num}/{atcf}'
+    base_url = f'https://www.nhc.noaa.gov/storm_graphics/{wallet}{storm_num}/{atcf}'
     return {gtype: f'{base_url}_{gtype}.png' for gtype in STORM_GRAPHIC_TYPES}
 
 
@@ -208,6 +207,7 @@ def main():
 
         for storm in storms:
             atcf = storm['atcf']
+            wallet = storm['wallet']
             storm_name = storm['name'] or '(unnamed)'
 
             is_new = atcf not in known_storms
@@ -215,8 +215,8 @@ def main():
                 print(f'  *** NEW STORM: {storm_name} ({atcf}) ***', file=sys.stderr)
 
             storm['basin'] = basin
-            storm['images'] = get_storm_image_urls(atcf)
             storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
+            storm['images'] = get_storm_image_urls(wallet, atcf)
             storm['detected_at'] = datetime.now(timezone.utc).isoformat()
             storm['image_alts'] = {
                 gtype: GRAPHIC_ALT_TEXT[gtype].format(name=storm_name)
