@@ -97,14 +97,19 @@ def load_json_config(filename: str):
         return output
 
 def main():
+    # Debug mode: set DEBUG=true to verify without posting (still downloads)
+    debug = os.getenv('DEBUG', 'false').lower() in ('true', '1', 'yes')
     do_downloads = True
-    do_uploads = True
-    do_post = True
+    do_uploads = not debug
+    do_post = not debug
     pds_url = os.getenv('PDS_URL', 'https://bsky.social')
 
-    bluesky_user = os.environ.get('BLUESKY_USER')
-    bluesky_pass = os.environ.get('BLUESKY_PASS')
     two_region = os.environ.get('TWO_REGION')
+    
+    # Convert region name to underscore format for env var (ATL-ES -> ATL_ES)
+    two_region_env = two_region.replace('-', '_')
+    bluesky_user = os.environ.get(f'BLUESKY_USER_{two_region_env}', os.environ.get('BLUESKY_USER'))
+    bluesky_pass = os.environ.get(f'BLUESKY_PASS_{two_region_env}', os.environ.get('BLUESKY_PASS'))
 
     config = load_json_config('two_config.json')
     region_config = config[two_region]

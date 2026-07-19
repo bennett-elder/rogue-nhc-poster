@@ -33,4 +33,9 @@ jobs:
         BLUESKY_PASS_EPAC: ${{ secrets.BLUESKY_PASS_EPAC }}
         BLUESKY_USER_CPAC: ${{ secrets.BLUESKY_USER_CPAC }}
         BLUESKY_PASS_CPAC: ${{ secrets.BLUESKY_PASS_CPAC }}
+        BLUESKY_USER_ATL_ES: ${{ secrets.BLUESKY_USER_ATL_ES }}
+        BLUESKY_PASS_ATL_ES: ${{ secrets.BLUESKY_PASS_ATL_ES }}
+        BLUESKY_USER_EPAC_ES: ${{ secrets.BLUESKY_USER_EPAC_ES }}
+        BLUESKY_PASS_EPAC_ES: ${{ secrets.BLUESKY_PASS_EPAC_ES }}
         WILL_SKEET: 'True'
+        DEBUG: ${{ vars.DEBUG }}

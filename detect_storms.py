@@ -9,7 +9,9 @@ from datetime import datetime, timezone
 
 BASIN_RSS_URLS = {
     'ATL':  'https://www.nhc.noaa.gov/index-at.xml',
+    'ATL-ES': 'https://www.nhc.noaa.gov/index-at-sp.xml',
     'EPAC': 'https://www.nhc.noaa.gov/index-ep.xml',
+    'EPAC-ES': 'https://www.nhc.noaa.gov/index-ep-sp.xml',
     'CPAC': 'https://www.nhc.noaa.gov/index-cp.xml',
 }
 
@@ -86,8 +88,16 @@ def get_storm_image_urls(atcf):
     return {gtype: f'{base_url}_{gtype}.png' for gtype in STORM_GRAPHIC_TYPES}
 
 
-def get_storm_advisory_url(wallet):
-    return f'https://www.nhc.noaa.gov/text/refresh/MIATCP{wallet}+shtml/'
+def get_storm_advisory_url(wallet, basin=''):
+    # Spanish advisory URLs use different prefixes:
+    # - Atlantic: MIATASEP{wallet}+shtml/
+    # - Eastern Pacific: MIATCPEP{wallet}+shtml/
+    if basin == 'ATL-ES':
+        return f'https://www.nhc.noaa.gov/text/refresh/MIATASEP{wallet}+shtml/'
+    elif basin == 'EPAC-ES':
+        return f'https://www.nhc.noaa.gov/text/refresh/MIATCPEP{wallet}+shtml/'
+    else:
+        return f'https://www.nhc.noaa.gov/text/refresh/MIATCP{wallet}+shtml/'
 
 
 def load_state(state_file):
@@ -150,7 +160,7 @@ def main():
 
             storm['basin'] = basin
             storm['images'] = get_storm_image_urls(atcf)
-            storm['advisory_url'] = get_storm_advisory_url(storm['wallet'])
+            storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
             storm['detected_at'] = datetime.now(timezone.utc).isoformat()
             storm['image_alts'] = {
                 gtype: GRAPHIC_ALT_TEXT[gtype].format(name=storm_name)

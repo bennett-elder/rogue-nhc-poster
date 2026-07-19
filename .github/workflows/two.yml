@@ -34,6 +34,7 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+        DEBUG: ${{ vars.DEBUG }}
       run: |
         python ./two.py
   EPAC:
@@ -54,6 +55,7 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+        DEBUG: ${{ vars.DEBUG }}
       run: |
         python ./two.py
   CPAC:
@@ -74,5 +76,6 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+        DEBUG: ${{ vars.DEBUG }}
       run: |
         python ./two.py
