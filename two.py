@@ -113,11 +113,16 @@ def main():
     two_2d0_url = region_config['two_2d0_url']
     two_7d0_url = region_config['two_7d0_url']
     ocean_name = region_config['ocean_name']
- 
-    contents = urllib.request.urlopen(two_txt_html_url).read().decode("utf-8") 
-    print(contents)
-    clean_left = contents.partition("<pre>")[2]
-    clean_right = clean_left.partition("</pre>")[0]
+    report_div_id = region_config['report_div_id']
+
+    contents = urllib.request.urlopen(two_txt_html_url).read().decode("utf-8")
+
+    div_start_marker = f'id="{report_div_id}"'
+    after_div_id = contents.partition(div_start_marker)[2]
+    after_div_open = after_div_id.partition(">")[2]
+    pre_contents = after_div_open.partition("<pre")[2]
+    pre_contents = pre_contents.partition(">")[2]
+    clean_right = pre_contents.partition("</pre>")[0]
 
     message = clean_right
     temp_split_message = message.split(two_txt_html_report_linebreaker)

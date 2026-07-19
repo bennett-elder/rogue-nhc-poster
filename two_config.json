@@ -1,23 +1,26 @@
 {
     "ATL": {
         "ocean_name": "Atlantic",
-        "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_txt.html",
-        "report_html_line_breaker": "<br />",
-        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_2d0.png",
-        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png"
+        "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=7&text",
+        "report_html_line_breaker": "<br>",
+        "report_div_id": "two-atl-en",
+        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_2d0_w1920.png",
+        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_7d0_w1920.png"
     },
     "CPAC": {
         "ocean_name": "Central Pacific",
-        "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_txt.html",
-        "report_html_line_breaker": "<br />",
-        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_2d0.png",
-        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_cpac_7d0.png"
+        "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=7&text",
+        "report_html_line_breaker": "<br>",
+        "report_div_id": "two-cpac-en",
+        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_cpac_2d0_w1920.png",
+        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_cpac_7d0_w1920.png"
     },
     "EPAC": {
         "ocean_name": "Eastern Pacific",
-        "report_html_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_txt.html",
-        "report_html_line_breaker": "<br />",
-        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_2d0.png",
-        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/two_pac_7d0.png"
+        "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=7&text",
+        "report_html_line_breaker": "<br>",
+        "report_div_id": "two-pac-en",
+        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_2d0_w1920.png",
+        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_7d0_w1920.png"
     }
 }
