@@ -7,6 +7,12 @@ on:
     - cron: '5 15 * * *'
     - cron: '5 21 * * *'
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Debug mode - skip posting to Bluesky'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   detect-and-post:
@@ -24,6 +30,8 @@ jobs:
         restore-keys: "known-storms-"
     - run: pip install requests
     - run: python3 detect_storms.py > result.json
+      env:
+        BASINS: 'ATL,EPAC,CPAC,ATL-ES,EPAC-ES'
     - run: python3 post_storm.py
       env:
         PDS_URL: 'https://bsky.social'
@@ -33,4 +41,9 @@ jobs:
         BLUESKY_PASS_EPAC: ${{ secrets.BLUESKY_PASS_EPAC }}
         BLUESKY_USER_CPAC: ${{ secrets.BLUESKY_USER_CPAC }}
         BLUESKY_PASS_CPAC: ${{ secrets.BLUESKY_PASS_CPAC }}
+        BLUESKY_USER_ATL_ES: ${{ secrets.BLUESKY_USER_ATL_ES }}
+        BLUESKY_PASS_ATL_ES: ${{ secrets.BLUESKY_PASS_ATL_ES }}
+        BLUESKY_USER_EPAC_ES: ${{ secrets.BLUESKY_USER_EPAC_ES }}
+        BLUESKY_PASS_EPAC_ES: ${{ secrets.BLUESKY_PASS_EPAC_ES }}
         WILL_SKEET: 'True'
+        DEBUG: ${{ inputs.debug }}

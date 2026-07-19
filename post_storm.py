@@ -8,13 +8,17 @@ from datetime import datetime, timezone
 import requests
 
 
-def fetch_advisory_text(advisory_url):
+def fetch_advisory_text(advisory_url, basin=''):
     contents = urllib.request.urlopen(advisory_url).read().decode('utf-8')
     clean_left = contents.partition('<pre>')[2]
     clean_right = clean_left.partition('</pre>')[0]
 
     header_stripped = clean_right.partition('...')[2]
-    gist = header_stripped.partition('SUMMARY')[0]
+    # Spanish uses RESUMEN instead of SUMMARY
+    if basin in ('ATL-ES', 'EPAC-ES'):
+        gist = header_stripped.partition('RESUMEN')[0]
+    else:
+        gist = header_stripped.partition('SUMMARY')[0]
 
     cleaned_gist = gist.replace("""...
 ...""", '. ').replace("""
@@ -98,6 +102,11 @@ class Poster:
 
 
 def main():
+    # Debug mode: set DEBUG=true to verify without posting (still downloads)
+    debug = os.getenv('DEBUG', 'false').lower() in ('true', '1', 'yes')
+    do_uploads = not debug
+    do_post = not debug
+    
     result_file = sys.argv[1] if len(sys.argv) > 1 else 'result.json'
 
     with open(result_file) as f:
@@ -119,18 +128,29 @@ def main():
         images = storm['images']
         image_alts = storm['image_alts']
 
-        bluesky_user = os.environ[f'BLUESKY_USER_{basin}']
-        bluesky_pass = os.environ[f'BLUESKY_PASS_{basin}']
+        # Convert basin name to underscore format for env var (ATL-ES -> ATL_ES)
+        basin_env = basin.replace('-', '_')
+        bluesky_user = os.environ[f'BLUESKY_USER_{basin_env}']
+        bluesky_pass = os.environ[f'BLUESKY_PASS_{basin_env}']
 
         print(f'Account ({basin}): {bluesky_user}')
-        print(f'\nPosting {storm_name} ({atcf})...')
+        print(f'Debug mode: {debug}')
+        print(f'\nProcessing {storm_name} ({atcf})...')
+        print(f'Advisory URL: {advisory_url}')
+        print(f'Image URLs: 5day_cone: {images["5day_cone"]}')
+        print(f'Image URLs: current_wind: {images["current_wind"]}')
 
-        gist = fetch_advisory_text(advisory_url)
-        print(gist)
+        gist = fetch_advisory_text(advisory_url, basin)
+        print(f'Advisory text: {gist}')
 
         if will_skeet not in ('True', 'true'):
             print('  no skeetin')
             continue
+
+        if debug:
+            print('DEBUG MODE: Skipping upload and post')
+        else:
+            print('LIVE MODE: Will upload and post to Bluesky')
 
         link_text = f'{storm_name} Public Advisory'
         message_text = f'{link_text}\n{gist}'
@@ -142,15 +162,17 @@ def main():
         poster = Poster(pds_url, bluesky_user, bluesky_pass)
 
         image_list = []
-        image_list = poster.add_image(image_list, 'tmp/img_5day.png', image_alts['5day_cone'])
-        image_list = poster.add_image(image_list, 'tmp/img_wind.png', image_alts['current_wind'])
+        if do_uploads:
+            image_list = poster.add_image(image_list, 'tmp/img_5day.png', image_alts['5day_cone'])
+            image_list = poster.add_image(image_list, 'tmp/img_wind.png', image_alts['current_wind'])
 
-        response = poster.create_post(message_text, image_list)
+        if do_post:
+            response = poster.create_post(message_text, image_list)
 
-        print("createRecord response:", file=sys.stderr)
-        print(json.dumps(response.json(), indent=2))
+            print("createRecord response:", file=sys.stderr)
+            print(json.dumps(response.json(), indent=2))
 
-        print('  posted!')
+            print('  posted!')
 
 
 if __name__ == '__main__':

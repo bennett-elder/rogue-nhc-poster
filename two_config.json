@@ -7,6 +7,14 @@
         "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_2d0_w1920.png",
         "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_7d0_w1920.png"
     },
+    "ATL-ES": {
+        "ocean_name": "Atlántico",
+        "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=7&text",
+        "report_html_line_breaker": "<br>",
+        "report_div_id": "two-atl-es",
+        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_2d0_w1920.png",
+        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_atl_7d0_w1920.png"
+    },
     "CPAC": {
         "ocean_name": "Central Pacific",
         "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=7&text",
@@ -20,6 +28,14 @@
         "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=7&text",
         "report_html_line_breaker": "<br>",
         "report_div_id": "two-pac-en",
+        "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_2d0_w1920.png",
+        "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_7d0_w1920.png"
+    },
+    "EPAC-ES": {
+        "ocean_name": "Pacífico Este",
+        "report_html_url": "https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=7&text",
+        "report_html_line_breaker": "<br>",
+        "report_div_id": "two-pac-es",
         "two_2d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_2d0_w1920.png",
         "two_7d0_url": "https://www.nhc.noaa.gov/xgtwo/resize/xgtwo_pac_7d0_w1920.png"
     }
