@@ -134,14 +134,23 @@ def main():
         bluesky_pass = os.environ[f'BLUESKY_PASS_{basin_env}']
 
         print(f'Account ({basin}): {bluesky_user}')
-        print(f'\nPosting {storm_name} ({atcf})...')
+        print(f'Debug mode: {debug}')
+        print(f'\nProcessing {storm_name} ({atcf})...')
+        print(f'Advisory URL: {advisory_url}')
+        print(f'Image URLs: 5day_cone: {images["5day_cone"]}')
+        print(f'Image URLs: current_wind: {images["current_wind"]}')
 
         gist = fetch_advisory_text(advisory_url, basin)
-        print(gist)
+        print(f'Advisory text: {gist}')
 
         if will_skeet not in ('True', 'true'):
             print('  no skeetin')
             continue
+
+        if debug:
+            print('DEBUG MODE: Skipping upload and post')
+        else:
+            print('LIVE MODE: Will upload and post to Bluesky')
 
         link_text = f'{storm_name} Public Advisory'
         message_text = f'{link_text}\n{gist}'

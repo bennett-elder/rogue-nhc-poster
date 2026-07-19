@@ -141,9 +141,19 @@ def main():
     else:
         partial_message = full_message
 
+    print(f'Region: {two_region}')
+    print(f'Debug mode: {debug}')
+    print(f'Ocean: {ocean_name}')
+    print(f'Image URLs: 2-day: {two_2d0_url}, 7-day: {two_7d0_url}')
+    print()
     print(partial_message)
     print(f'partial_message length: {len(partial_message)}')
     print(f'full_message length: {len(full_message)}')
+    print()
+    if debug:
+        print('DEBUG MODE: Skipping upload and post')
+    else:
+        print('LIVE MODE: Will upload and post to Bluesky')
 
     if len(partial_message) > 300:
         partial_message = partial_message[0:300]
