@@ -141,7 +141,8 @@ def parse_rss_storms(xml_content, basin=''):
 
 def get_storm_image_urls(wallet, atcf):
     storm_num = atcf[2:4]
-    base_url = f'https://www.nhc.noaa.gov/storm_graphics/{wallet}{storm_num}/{atcf}'
+    basin = wallet[:2]
+    base_url = f'https://www.nhc.noaa.gov/storm_graphics/{basin}{storm_num}/{atcf}'
     return {gtype: f'{base_url}_{gtype}.png' for gtype in STORM_GRAPHIC_TYPES}
 
 
