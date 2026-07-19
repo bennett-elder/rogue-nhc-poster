@@ -12,29 +12,25 @@ jobs:
   detect-and-post:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - uses: actions/cache@v4
-        id: storm-cache
-        with:
-          path: known_storms.json
-          key: known-storms-${{ github.run_id }}
-          restore-keys: known-storms-
-
-       - run: pip install requests
-       - run: python3 detect_storms.py > result.json
-
-      - run: python3 post_storm.py
-        env:
-          PDS_URL: 'https://bsky.social'
-          BLUESKY_USER_ATL: ${{ secrets.BLUESKY_USER_ATL }}
-          BLUESKY_PASS_ATL: ${{ secrets.BLUESKY_PASS_ATL }}
-          BLUESKY_USER_EPAC: ${{ secrets.BLUESKY_USER_EPAC }}
-          BLUESKY_PASS_EPAC: ${{ secrets.BLUESKY_PASS_EPAC }}
-          BLUESKY_USER_CPAC: ${{ secrets.BLUESKY_USER_CPAC }}
-          BLUESKY_PASS_CPAC: ${{ secrets.BLUESKY_PASS_CPAC }}
-          WILL_SKEET: 'True'
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+    - uses: actions/cache@v4
+      id: storm-cache
+      with:
+        path: known_storms.json
+        key: known-storms-${{ github.run_id }}
+        restore-keys: "known-storms-"
+    - run: pip install requests
+    - run: python3 detect_storms.py > result.json
+    - run: python3 post_storm.py
+      env:
+        PDS_URL: 'https://bsky.social'
+        BLUESKY_USER_ATL: ${{ secrets.BLUESKY_USER_ATL }}
+        BLUESKY_PASS_ATL: ${{ secrets.BLUESKY_PASS_ATL }}
+        BLUESKY_USER_EPAC: ${{ secrets.BLUESKY_USER_EPAC }}
+        BLUESKY_PASS_EPAC: ${{ secrets.BLUESKY_PASS_EPAC }}
+        BLUESKY_USER_CPAC: ${{ secrets.BLUESKY_USER_CPAC }}
+        BLUESKY_PASS_CPAC: ${{ secrets.BLUESKY_PASS_CPAC }}
+        WILL_SKEET: 'True'
