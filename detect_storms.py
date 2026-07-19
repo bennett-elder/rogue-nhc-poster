@@ -115,7 +115,7 @@ def main():
     state_file = os.environ.get('STATE_FILE', 'known_storms.json')
 
     known_storms = load_state(state_file)
-    new_storms = []
+    active_storms = []
 
     for basin in basins:
         basin = basin.strip()
@@ -144,11 +144,9 @@ def main():
             atcf = storm['atcf']
             storm_name = storm['name'] or '(unnamed)'
 
-            if atcf in known_storms:
-                print(f'  Known storm: {storm_name} ({atcf})', file=sys.stderr)
-                continue
-
-            print(f'  *** NEW STORM: {storm_name} ({atcf}) ***', file=sys.stderr)
+            is_new = atcf not in known_storms
+            if is_new:
+                print(f'  *** NEW STORM: {storm_name} ({atcf}) ***', file=sys.stderr)
 
             storm['basin'] = basin
             storm['images'] = get_storm_image_urls(atcf)
@@ -159,19 +157,20 @@ def main():
                 for gtype in STORM_GRAPHIC_TYPES
             }
 
-            new_storms.append(storm)
+            active_storms.append(storm)
 
-            known_storms[atcf] = {
-                'name': storm_name,
-                'type': storm['type'],
-                'wallet': storm['wallet'],
-                'first_seen': storm['detected_at'],
-            }
+            if is_new:
+                known_storms[atcf] = {
+                    'name': storm_name,
+                    'type': storm['type'],
+                    'wallet': storm['wallet'],
+                    'first_seen': storm['detected_at'],
+                }
 
     save_state(state_file, known_storms)
 
     output = {
-        'new_storms': new_storms,
+        'active_storms': active_storms,
         'known_storms': known_storms,
         'last_checked': datetime.now(timezone.utc).isoformat(),
     }

@@ -103,15 +103,15 @@ def main():
     with open(result_file) as f:
         data = json.load(f)
 
-    new_storms = data.get('new_storms', [])
-    if not new_storms:
-        print('No new storms to post')
+    active_storms = data.get('active_storms', [])
+    if not active_storms:
+        print('No active storms to post')
         return
 
     will_skeet = os.getenv('WILL_SKEET', 'False')
     pds_url = os.getenv('PDS_URL', 'https://bsky.social')
 
-    for storm in new_storms:
+    for storm in active_storms:
         storm_name = storm['name']
         atcf = storm['atcf']
         basin = storm['basin']
