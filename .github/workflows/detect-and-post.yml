@@ -7,6 +7,12 @@ on:
     - cron: '5 15 * * *'
     - cron: '5 21 * * *'
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Debug mode - skip posting to Bluesky'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   detect-and-post:
@@ -38,4 +44,4 @@ jobs:
         BLUESKY_USER_EPAC_ES: ${{ secrets.BLUESKY_USER_EPAC_ES }}
         BLUESKY_PASS_EPAC_ES: ${{ secrets.BLUESKY_PASS_EPAC_ES }}
         WILL_SKEET: 'True'
-        DEBUG: ${{ vars.DEBUG }}
+        DEBUG: ${{ inputs.debug }}

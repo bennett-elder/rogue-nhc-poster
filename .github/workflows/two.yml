@@ -2,6 +2,12 @@ name: Tropical Weather Outlook
 
 on:
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Debug mode - skip posting to Bluesky'
+        required: false
+        default: 'false'
+        type: boolean
   schedule:
     # Daily midnight run (8pm EDT, 5pm PDT, 2pm HST)
     - cron: '5 0 * * *'
@@ -34,7 +40,7 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
-        DEBUG: ${{ vars.DEBUG }}
+        DEBUG: ${{ inputs.debug }}
       run: |
         python ./two.py
   EPAC:
@@ -55,7 +61,7 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
-        DEBUG: ${{ vars.DEBUG }}
+        DEBUG: ${{ inputs.debug }}
       run: |
         python ./two.py
   CPAC:
@@ -76,6 +82,6 @@ jobs:
         TWO_REGION: ${{ vars.TWO_REGION }}
         BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
         BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
-        DEBUG: ${{ vars.DEBUG }}
+        DEBUG: ${{ inputs.debug }}
       run: |
         python ./two.py
