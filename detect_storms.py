@@ -153,8 +153,10 @@ def get_storm_advisory_url(wallet, basin=''):
     # Spanish advisory URLs use different prefixes:
     # - Atlantic: MIATASEP{wallet}+shtml/
     # - Eastern Pacific: MIATASEP{wallet}+shtml/
-    if basin in ('ATL-ES', 'EPAC-ES'):
-        return f'https://www.nhc.noaa.gov/text/refresh/MIATASEP{wallet}+shtml/'
+    if basin == 'ATL-ES':
+        return f'https://www.nhc.noaa.gov/text/refresh/MIATAS{wallet}+shtml/'
+    elif basin == 'EPAC-ES':
+        return f'https://www.nhc.noaa.gov/text/refresh/MIATAS{wallet}+shtml/'
     else:
         return f'https://www.nhc.noaa.gov/text/refresh/MIATCP{wallet}+shtml/'
 
@@ -180,7 +182,7 @@ def save_state(state_file, known_storms):
 
 
 def main():
-    basins = os.environ.get('BASINS', 'ATL,EPAC,CPAC').split(',')
+    basins = os.environ.get('BASINS', 'ATL,ATL-ES,EPAC,CPAC,EPAC-ES').split(',')
     state_file = os.environ.get('STATE_FILE', 'known_storms.json')
 
     known_storms = load_state(state_file)
@@ -219,7 +221,7 @@ def main():
                 print(f'  *** NEW STORM: {storm_name} ({atcf}) ***', file=sys.stderr)
 
             storm['basin'] = basin
-            storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
+            # storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
             storm['images'] = get_storm_image_urls(wallet, atcf)
             storm['detected_at'] = datetime.now(timezone.utc).isoformat()
             storm['image_alts'] = {

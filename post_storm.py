@@ -124,7 +124,8 @@ def main():
         storm_name = storm['name']
         atcf = storm['atcf']
         basin = storm['basin']
-        advisory_url = storm['advisory_url']
+        # advisory_url = storm['advisory_url']
+        link = storm['link']
         images = storm['images']
         image_alts = storm['image_alts']
 
@@ -136,11 +137,12 @@ def main():
         print(f'Account ({basin}): {bluesky_user}')
         print(f'Debug mode: {debug}')
         print(f'\nProcessing {storm_name} ({atcf})...')
-        print(f'Advisory URL: {advisory_url}')
+        # print(f'Advisory URL: {advisory_url}')
+        print(f'Link: {link}')
         print(f'Image URLs: 5day_cone: {images["5day_cone"]}')
         print(f'Image URLs: current_wind: {images["current_wind"]}')
 
-        gist = fetch_advisory_text(advisory_url, basin)
+        gist = fetch_advisory_text(link, basin)
         print(f'Advisory text: {gist}')
 
         if will_skeet not in ('True', 'true'):
