@@ -222,7 +222,11 @@ def main():
 
             storm['basin'] = basin
             # storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
-            storm['images'] = get_storm_image_urls(wallet, atcf)
+            images = get_storm_image_urls(wallet, atcf)
+            if '-ES' in basin:
+                images['5day_cone'] = images['5day_cone'].replace('_5day_cone.png', '_5day_cone_es.png')
+                images['3day_cone'] = images['3day_cone'].replace('_3day_cone.png', '_3day_cone_es.png')
+            storm['images'] = images
             storm['detected_at'] = datetime.now(timezone.utc).isoformat()
             storm['image_alts'] = {
                 gtype: GRAPHIC_ALT_TEXT[gtype].format(name=storm_name)
