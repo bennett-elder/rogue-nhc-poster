@@ -131,8 +131,11 @@ def parse_rss_storms(xml_content, basin=''):
             pubdate_el = item.find('pubDate')
             pubdate = pubdate_el.text.strip() if pubdate_el is not None and pubdate_el.text else ''
 
-            description = description.replace("Golfo de America", "Gulfo de Mexico")
-            description = description.replace("GOLFO DE AMERICA", "GOLFO DE MEXICO")
+            description = description.replace("Golfo de America", "Golfo de México")
+            description = description.replace("Golfo de América", "Golfo de México")
+            description = description.replace("GOLFO DE AMERICA", "GOLFO DE MÉXICO")
+            description = description.replace("GOLFO DE AMÉRICA", "GOLFO DE MÉXICO")
+            
 
             storms.append({
                 'name': storm_name,
