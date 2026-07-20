@@ -223,15 +223,21 @@ def main():
             storm['basin'] = basin
             # storm['advisory_url'] = get_storm_advisory_url(storm['wallet'], basin)
             images = get_storm_image_urls(wallet, atcf)
-            if '-ES' in basin:
-                images['5day_cone'] = images['5day_cone'].replace('_5day_cone.png', '_5day_cone_es.png')
-                images['3day_cone'] = images['3day_cone'].replace('_3day_cone.png', '_3day_cone_es.png')
-            storm['images'] = images
-            storm['detected_at'] = datetime.now(timezone.utc).isoformat()
-            storm['image_alts'] = {
+            image_alts = {
                 gtype: GRAPHIC_ALT_TEXT[gtype].format(name=storm_name)
                 for gtype in STORM_GRAPHIC_TYPES
             }
+            if '-ES' in basin:
+                images['5day_cone'] = images['5day_cone'].replace('_5day_cone.png', '_5day_cone_es.png')
+                images['3day_cone'] = images['3day_cone'].replace('_3day_cone.png', '_3day_cone_es.png')
+                image_alts['5day_cone'] = image_alts['5day_cone'].replace('5-day forecast cone for', 'Cono de pronóstico a 5 días para')
+                image_alts['3day_cone'] = image_alts['3day_cone'].replace('3-day forecast cone for', 'Cono de pronóstico a 3 días para')
+                image_alts['current_wind'] = image_alts['current_wind'].replace('Surface wind field for', 'Campo de viento superficial para')
+                image_alts['wind_probs_34_F120'] = image_alts['wind_probs_34_F120'].replace('34-knot wind speed probability for', 'Probabilidad de viento de 34 nudos para')
+                
+            storm['images'] = images
+            storm['image_alts'] = image_alts
+            storm['detected_at'] = datetime.now(timezone.utc).isoformat()
 
             active_storms.append(storm)
 
